@@ -120,7 +120,7 @@ class Classifier_RESNET:
 
         return model
 
-    def fit(self, x_train, y_train, x_val, y_val, batch_size=64, nb_epochs=1500):
+    def fit(self, x_train, y_train, x_val, y_val, class_weight, batch_size=64, nb_epochs=1500):
         # if not tf.test.is_gpu_available:
         #     print('error')
         #     exit()
@@ -134,13 +134,14 @@ class Classifier_RESNET:
 
         hist = self.model.fit(x_train, y_train, batch_size=mini_batch_size, epochs=nb_epochs,
                               verbose=self.verbose, validation_data=(x_val, y_val),
+                              class_weight=class_weight,
                               callbacks=self.callbacks)
 
         duration = time.time() - start_time
 
         self.model.save(self.output_directory + 'last_model.hdf5')
 
-        y_pred = self.predict(x_val, y_val, x_train, y_train,
+        y_pred = self.predict(x=x_train, y=y_train, x_test=x_val, y_test=y_val,
                               return_df_metrics=False)
 
         # save predictions
@@ -156,14 +157,20 @@ class Classifier_RESNET:
 
         return df_metrics
 
-    def predict(self, x, y, return_df_metrics=True):
+    def predict(self, x, y, x_test=None, y_test=None, return_df_metrics=True):
         start_time = time.time()
         model_path = self.output_directory + 'best_model.hdf5'
         model = keras.models.load_model(model_path)
         y_pred = model.predict(x)
         if return_df_metrics:
             y_pred = y_pred > .5
-            df_metrics = calculate_metrics(y, y_pred, 0.0)
+            if x_test:
+                y_test_pred = model.predict(x_test)
+                y_test_pred = y_test_pred > .5
+            else:
+                y_test_pred = None
+            df_metrics = calculate_metrics(y_true=y, y_pred=y_pred, duration=0.0, y_true_val=y_test,
+                                           y_pred_val=y_test_pred)
             return df_metrics
         else:
             test_duration = time.time() - start_time
