@@ -3,16 +3,15 @@
 # momentum-> #hidden_units -> # learning_rate_decay -> #layers 
 import time
 
-import matplotlib
 import numpy as np
 import tensorflow.keras as keras
 
+from dl_ts_models.utils.utils import calculate_metrics
+from dl_ts_models.utils.utils import save_logs
 from dl_ts_models.utils.utils import save_test_duration
 
-matplotlib.use('agg')
 
-from dl_ts_models.utils.utils import save_logs
-from dl_ts_models.utils.utils import calculate_metrics
+# matplotlib.use('agg')
 
 
 class Classifier_RESNET:
@@ -148,6 +147,7 @@ class Classifier_RESNET:
 
         # convert the predicted from binary to integer
         y_pred = np.argmax(y_pred, axis=1)
+        y_val = np.argmax(y_val, axis=1)
         print("saving results to ", self.output_directory)
         df_metrics = save_logs(self.output_directory, hist, y_pred, y_val, duration)
 

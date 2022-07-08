@@ -1,31 +1,26 @@
+import operator
+# matplotlib.rcParams['font.family'] = 'sans-serif'
+# matplotlib.rcParams['font.sans-serif'] = 'Arial'
+import os
 from builtins import print
 
-import matplotlib
+# matplotlib.use('agg')
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
-
-matplotlib.rcParams['font.family'] = 'sans-serif'
-matplotlib.rcParams['font.sans-serif'] = 'Arial'
-import os
-import operator
-
-from dl_ts_models.utils.constants import UNIVARIATE_DATASET_NAMES as DATASET_NAMES
-from dl_ts_models.utils.constants import UNIVARIATE_DATASET_NAMES_2018 as DATASET_NAMES_2018
-from dl_ts_models.utils.constants import ARCHIVE_NAMES as ARCHIVE_NAMES
-from dl_ts_models.utils.constants import CLASSIFIERS
-from dl_ts_models.utils.constants import ITERATIONS
-from dl_ts_models.utils.constants import MTS_DATASET_NAMES
-
+from scipy.interpolate import interp1d
+from scipy.io import loadmat
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 from sklearn.preprocessing import LabelEncoder
 
-from scipy.interpolate import interp1d
-from scipy.io import loadmat
+from dl_ts_models.utils.constants import ARCHIVE_NAMES as ARCHIVE_NAMES
+from dl_ts_models.utils.constants import CLASSIFIERS
+from dl_ts_models.utils.constants import ITERATIONS
+from dl_ts_models.utils.constants import MTS_DATASET_NAMES
+from dl_ts_models.utils.constants import UNIVARIATE_DATASET_NAMES as DATASET_NAMES
+from dl_ts_models.utils.constants import UNIVARIATE_DATASET_NAMES_2018 as DATASET_NAMES_2018
 
 
 def readucr(filename):
