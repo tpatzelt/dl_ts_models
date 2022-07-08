@@ -106,7 +106,7 @@ class Classifier_RESNET:
 
         model = keras.models.Model(inputs=input_layer, outputs=output_layer)
 
-        model.compile(loss='binary_crossentropy', optimizer=keras.optimizers.Adam(),
+        model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(),
                       metrics=['accuracy'])
 
         reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.5, patience=50, min_lr=0.0001)
@@ -120,7 +120,7 @@ class Classifier_RESNET:
 
         return model
 
-    def fit(self, x_train, y_train, x_val, y_val, class_weight, batch_size=64, nb_epochs=1500):
+    def fit(self, x_train, y_train, x_val, y_val, class_weight=None, batch_size=64, nb_epochs=1500):
         # if not tf.test.is_gpu_available:
         #     print('error')
         #     exit()
