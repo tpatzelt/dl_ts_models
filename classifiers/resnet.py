@@ -1,24 +1,24 @@
 # resnet model 
 # when tuning start with learning rate->mini_batch_size -> 
 # momentum-> #hidden_units -> # learning_rate_decay -> #layers 
-import tensorflow.keras as keras
-import tensorflow as tf
-import numpy as np
 import time
 
 import matplotlib
-from utils.utils import save_test_duration
+import numpy as np
+import tensorflow.keras as keras
+
+from dl_ts_models.utils.utils import save_test_duration
 
 matplotlib.use('agg')
-import matplotlib.pyplot as plt
 
-from utils.utils import save_logs
-from utils.utils import calculate_metrics
+from dl_ts_models.utils.utils import save_logs
+from dl_ts_models.utils.utils import calculate_metrics
 
 
 class Classifier_RESNET:
 
-    def __init__(self, output_directory, input_shape, nb_classes, verbose=False, build=True, load_weights=False):
+    def __init__(self, output_directory, input_shape, nb_classes, verbose=False, build=True,
+                 load_weights=False):
         self.output_directory = output_directory
         if build == True:
             self.model = self.build_model(input_shape, nb_classes)
@@ -120,20 +120,21 @@ class Classifier_RESNET:
 
         return model
 
-    def fit(self, x_train, y_train, x_val, y_val, y_true):
-        if not tf.test.is_gpu_available:
-            print('error')
-            exit()
+    def fit(self, x_train, y_train, x_val, y_val, y_true, batch_size=64, nb_epochs=1500):
+        # if not tf.test.is_gpu_available:
+        #     print('error')
+        #     exit()
         # x_val and y_val are only used to monitor the test loss and NOT for training
-        batch_size = 64
-        nb_epochs = 1500
+        # batch_size = 64
+        # nb_epochs = 1500
 
         mini_batch_size = int(min(x_train.shape[0] / 10, batch_size))
 
         start_time = time.time()
 
         hist = self.model.fit(x_train, y_train, batch_size=mini_batch_size, epochs=nb_epochs,
-                              verbose=self.verbose, validation_data=(x_val, y_val), callbacks=self.callbacks)
+                              verbose=self.verbose, validation_data=(x_val, y_val),
+                              callbacks=self.callbacks)
 
         duration = time.time() - start_time
 

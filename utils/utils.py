@@ -1,7 +1,8 @@
 from builtins import print
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
 
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
@@ -11,14 +12,12 @@ matplotlib.rcParams['font.sans-serif'] = 'Arial'
 import os
 import operator
 
-import utils
-
-from utils.constants import UNIVARIATE_DATASET_NAMES as DATASET_NAMES
-from utils.constants import UNIVARIATE_DATASET_NAMES_2018 as DATASET_NAMES_2018
-from utils.constants import ARCHIVE_NAMES  as ARCHIVE_NAMES
-from utils.constants import CLASSIFIERS
-from utils.constants import ITERATIONS
-from utils.constants import MTS_DATASET_NAMES
+from dl_ts_models.utils.constants import UNIVARIATE_DATASET_NAMES as DATASET_NAMES
+from dl_ts_models.utils.constants import UNIVARIATE_DATASET_NAMES_2018 as DATASET_NAMES_2018
+from dl_ts_models.utils.constants import ARCHIVE_NAMES as ARCHIVE_NAMES
+from dl_ts_models.utils.constants import CLASSIFIERS
+from dl_ts_models.utils.constants import ITERATIONS
+from dl_ts_models.utils.constants import MTS_DATASET_NAMES
 
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score

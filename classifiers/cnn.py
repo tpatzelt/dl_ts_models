@@ -1,17 +1,19 @@
 # FCN model
 # when tuning start with learning rate->mini_batch_size ->
 # momentum-> #hidden_units -> # learning_rate_decay -> #layers
-import tensorflow.keras as keras
-import tensorflow as tf
-import numpy as np
 import time
 
-from utils.utils import save_logs
-from utils.utils import calculate_metrics
+import numpy as np
+import tensorflow as tf
+import tensorflow.keras as keras
+
+from dl_ts_models.utils.utils import calculate_metrics
+from dl_ts_models.utils.utils import save_logs
+
 
 class Classifier_CNN:
 
-    def __init__(self, output_directory, input_shape, nb_classes, verbose=False,build=True):
+    def __init__(self, output_directory, input_shape, nb_classes, verbose=False, build=True):
         self.output_directory = output_directory
 
         if build == True:
