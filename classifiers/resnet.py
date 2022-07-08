@@ -106,7 +106,7 @@ class Classifier_RESNET:
 
         model = keras.models.Model(inputs=input_layer, outputs=output_layer)
 
-        model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(),
+        model.compile(loss='binary_crossentropy', optimizer=keras.optimizers.Adam(),
                       metrics=['accuracy'])
 
         reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.5, patience=50, min_lr=0.0001)
@@ -120,7 +120,7 @@ class Classifier_RESNET:
 
         return model
 
-    def fit(self, x_train, y_train, x_val, y_val, y_true, batch_size=64, nb_epochs=1500):
+    def fit(self, x_train, y_train, x_val, y_val, batch_size=64, nb_epochs=1500):
         # if not tf.test.is_gpu_available:
         #     print('error')
         #     exit()
@@ -140,29 +140,30 @@ class Classifier_RESNET:
 
         self.model.save(self.output_directory + 'last_model.hdf5')
 
-        y_pred = self.predict(x_val, y_true, x_train, y_train, y_val,
+        y_pred = self.predict(x_val, y_val, x_train, y_train,
                               return_df_metrics=False)
 
         # save predictions
         np.save(self.output_directory + 'y_pred.npy', y_pred)
 
         # convert the predicted from binary to integer
-        y_pred = np.argmax(y_pred, axis=1)
-
-        df_metrics = save_logs(self.output_directory, hist, y_pred, y_true, duration)
+        print(y_pred[:10])
+        y_pred = y_pred > .5
+        print("saving results to ", self.output_directory)
+        df_metrics = save_logs(self.output_directory, hist, y_pred, y_val, duration)
 
         keras.backend.clear_session()
 
         return df_metrics
 
-    def predict(self, x_test, y_true, x_train, y_train, y_test, return_df_metrics=True):
+    def predict(self, x, y, return_df_metrics=True):
         start_time = time.time()
         model_path = self.output_directory + 'best_model.hdf5'
         model = keras.models.load_model(model_path)
-        y_pred = model.predict(x_test)
+        y_pred = model.predict(x)
         if return_df_metrics:
-            y_pred = np.argmax(y_pred, axis=1)
-            df_metrics = calculate_metrics(y_true, y_pred, 0.0)
+            y_pred = y_pred > .5
+            df_metrics = calculate_metrics(y, y_pred, 0.0)
             return df_metrics
         else:
             test_duration = time.time() - start_time
