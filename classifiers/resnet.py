@@ -141,14 +141,13 @@ class Classifier_RESNET:
 
         self.model.save(self.output_directory + 'last_model.hdf5')
 
-        y_pred = self.predict(x=x_val, y=y_val,
-                              return_df_metrics=False)
+        y_pred = self.model.predict(x_val)
 
         # save predictions
         np.save(self.output_directory + 'y_pred.npy', y_pred)
 
         # convert the predicted from binary to integer
-        y_pred = np.argmax(y_pred)
+        y_pred = np.argmax(y_pred, axis=1)
         print("saving results to ", self.output_directory)
         df_metrics = save_logs(self.output_directory, hist, y_pred, y_val, duration)
 
@@ -162,10 +161,10 @@ class Classifier_RESNET:
         model = keras.models.load_model(model_path)
         y_pred = model.predict(x)
         if return_df_metrics:
-            y_pred = np.argmax(y_pred)
+            y_pred = np.argmax(y_pred, axis=1)
             if x_test:
                 y_test_pred = model.predict(x_test)
-                y_test_pred = np.argmax(y_test_pred)
+                y_test_pred = np.argmax(y_test_pred, axis=1)
             else:
                 y_test_pred = None
             df_metrics = calculate_metrics(y_true=np.argmax(y), y_pred=y_pred, duration=0.0,
