@@ -361,6 +361,8 @@ def save_logs_t_leNet(output_directory, hist, y_pred, y_true, duration):
 
 def save_logs(output_directory, hist, y_pred, y_true, duration, lr=False, y_true_val=None,
               y_pred_val=None):
+    from joblib import dump
+    dump(hist, output_directory + "history.joblib")
     hist_df = pd.DataFrame(hist.history)
     hist_df.to_csv(output_directory + 'history.csv', index=False)
 
